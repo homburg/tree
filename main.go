@@ -67,12 +67,12 @@ func main() {
 	lines := []string{
 		"1.2.fisk",
 		"1.2.3.4",
-		"1.2.3.fisk2",
+		"1.2.3.fisk1",
 		"1.2.3.fisk3",
+		"1.2.3.fisk4",
 		"1.2.3.fisk5",
-		"1.2.3.fisk2",
 		"1.2.3.fisk7",
-		"1.2.3.fisk5",
+		"1.2.3.fisk8",
 	}
 
 	g := newTree(".")
