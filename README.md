@@ -1,5 +1,7 @@
 # Tree
 
+[![Build Status](https://travis-ci.org/homburg/tree.svg?branch=master)](https://travis-ci.org/homburg/tree)
+
 Create an ascii tree (like `$ tree`) from any text
 using a custom delimiter.
 
