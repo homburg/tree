@@ -1,4 +1,4 @@
-package go_tree
+package tree
 
 import (
 	"sort"
