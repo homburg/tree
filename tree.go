@@ -1,7 +1,8 @@
-package tree
+package go_tree
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -51,9 +52,18 @@ func (n *node) Format(indent string) string {
 	if n.isLeaf() || len(n.nodes) == 0 {
 		panic("")
 	} else {
-		// for key, c := range n.nodes {
-		i := len(n.nodes) - 1
-		for key, c := range n.nodes {
+		keys := make([]string, len(n.nodes))
+		i := 0
+		for key := range n.nodes {
+			keys[i] = key
+			i++
+		}
+
+		sort.Strings(keys)
+
+		i = len(n.nodes) - 1
+		for _, key := range keys {
+			c := n.nodes[key]
 			newLine := indent[:len(indent)-8]
 			if i == 0 {
 				newLine += "└── "

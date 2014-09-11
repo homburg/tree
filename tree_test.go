@@ -1,4 +1,4 @@
-package tree
+package go_tree
 
 import (
 	"fmt"
@@ -41,8 +41,8 @@ func ExampleTree() {
 	// │   │   │   │   ├── 2
 	// │   │   │   │   └── fisk.txt
 	// │   │   │   └── fisk.txt
-	// │   │   ├── fisk2.txt
-	// │   │   └── fisk.txt
+	// │   │   ├── fisk.txt
+	// │   │   └── fisk2.txt
 	// │   └── fisk.txt
 	// └── fisk.txt
 }
