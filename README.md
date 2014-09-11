@@ -18,9 +18,9 @@ func main() {
 	t := tree.New("-")
 
 	t.EatLines([]string{
-		"first"
-		"first-second.txt"
-		"third"
+		"first",
+		"first-second.txt",
+		"third",
 	})
 
 	fmt.Println(t.Format())
