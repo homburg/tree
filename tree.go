@@ -1,4 +1,4 @@
-package main
+package tree
 
 import (
 	"fmt"
@@ -46,6 +46,41 @@ func (n *node) String() string {
 	}
 }
 
+func (n *node) Format(indent string) string {
+	var lines []string
+	if n.isLeaf() || len(n.nodes) == 0 {
+		panic("")
+	} else {
+		// for key, c := range n.nodes {
+		i := len(n.nodes) - 1
+		for key, c := range n.nodes {
+			newLine := indent[:len(indent)-8]
+			if i == 0 {
+				newLine += "└── "
+				indent = indent[:len(indent)-8] + "    "
+			} else if len(indent) == 8 && i == (len(n.nodes)-1) {
+				newLine += "."
+			} else {
+				newLine += "├── "
+			}
+			newLine += key
+			lines = append(
+				lines,
+				newLine,
+			)
+
+			if !c.isLeaf() {
+				lines = append(
+					lines,
+					c.Format(indent+"│   "),
+				)
+			}
+			i -= 1
+		}
+		return strings.Join(lines, "\n")
+	}
+}
+
 type tree struct {
 	separator string
 	root      *node
@@ -53,6 +88,10 @@ type tree struct {
 
 func (g *tree) String() string {
 	return g.root.String()
+}
+
+func (g *tree) Format() string {
+	return g.root.Format("│   ")
 }
 
 func newTree(separator string) *tree {
@@ -70,9 +109,11 @@ func main() {
 		"1.2.3.fisk1",
 		"1.2.3.fisk3",
 		"1.2.3.fisk4",
-		"1.2.3.fisk5",
-		"1.2.3.fisk7",
-		"1.2.3.fisk8",
+		"1.4",
+		"1.4.3",
+		"1.4.4",
+		"2",
+		"17",
 	}
 
 	g := newTree(".")
@@ -81,5 +122,5 @@ func main() {
 		g.eat(line)
 	}
 
-	fmt.Println(g)
+	fmt.Println(g.Format())
 }
