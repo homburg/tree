@@ -1,7 +1,6 @@
 package go_tree
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 )
@@ -36,14 +35,6 @@ func (n *node) eat(segments []string) {
 
 	if len(segments) > 1 {
 		subNode.eat(segments[1:])
-	}
-}
-
-func (n *node) String() string {
-	if n.isLeaf() {
-		return ""
-	} else {
-		return fmt.Sprint(n.nodes)
 	}
 }
 
@@ -96,41 +87,20 @@ type tree struct {
 	root      *node
 }
 
-func (g *tree) String() string {
-	return g.root.String()
-}
-
 func (g *tree) Format() string {
 	return g.root.Format("│   ")
 }
 
-func newTree(separator string) *tree {
+func New(separator string) *tree {
 	return &tree{separator, &node{}}
 }
 
-func (g *tree) eat(line string) {
+func (g *tree) Eat(line string) {
 	g.root.eat(strings.Split(line, g.separator))
 }
 
-func main() {
-	lines := []string{
-		"1.2.fisk",
-		"1.2.3.4",
-		"1.2.3.fisk1",
-		"1.2.3.fisk3",
-		"1.2.3.fisk4",
-		"1.4",
-		"1.4.3",
-		"1.4.4",
-		"2",
-		"17",
-	}
-
-	g := newTree(".")
-
+func (g *tree) EatLines(lines []string) {
 	for _, line := range lines {
-		g.eat(line)
+		g.Eat(line)
 	}
-
-	fmt.Println(g.Format())
 }

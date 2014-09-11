@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"sort"
 	"strings"
 )
 
@@ -14,12 +13,11 @@ func ExampleTree() {
 		log.Fatal(err)
 	}
 
-	g := newTree("/")
+	g := New("/")
 	lines := strings.Split(string(file), "\n")
-	sort.Strings(lines)
-	for _, line := range lines {
-		g.eat(line)
-	}
+
+	g.EatLines(lines)
+
 	fmt.Print(g.Format())
 	// Output:
 	// .
