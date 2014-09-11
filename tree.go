@@ -41,7 +41,7 @@ func (n *node) eat(segments []string) {
 func (n *node) Format(indent string) string {
 	var lines []string
 	if n.isLeaf() || len(n.nodes) == 0 {
-		panic("")
+		return ""
 	} else {
 		keys := make([]string, len(n.nodes))
 		i := 0
@@ -80,6 +80,7 @@ func (n *node) Format(indent string) string {
 		}
 		return strings.Join(lines, "\n")
 	}
+	return ""
 }
 
 type tree struct {
