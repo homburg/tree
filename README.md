@@ -34,6 +34,7 @@ func main() {
 
 ## TODO
 
+- test
 - cli
   - CaaP (cli as a pipe)
 
