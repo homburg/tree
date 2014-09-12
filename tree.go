@@ -1,6 +1,8 @@
 package tree
 
 import (
+	"fmt"
+	"github.com/fatih/color"
 	"sort"
 	"strings"
 )
@@ -45,7 +47,7 @@ func (n *node) eat(segments []string) {
 	}
 }
 
-func (n *node) Format(indent string) string {
+func (n *node) Format(indent string, t *tree) string {
 	var lines []string
 	if n.isLeaf() || len(n.nodes) == 0 {
 		return ""
@@ -69,7 +71,7 @@ func (n *node) Format(indent string) string {
 			} else {
 				newLine += TEE
 			}
-			newLine += key
+			newLine += fmt.Sprintf(t.NodeFormat, key)
 			lines = append(
 				lines,
 				newLine,
@@ -78,7 +80,7 @@ func (n *node) Format(indent string) string {
 			if !c.isLeaf() {
 				lines = append(
 					lines,
-					c.Format(indent+PIPE),
+					c.Format(indent+PIPE, t),
 				)
 			}
 			i -= 1
@@ -89,16 +91,21 @@ func (n *node) Format(indent string) string {
 }
 
 type tree struct {
-	separator string
-	root      *node
+	separator  string
+	root       *node
+	NodeFormat string
 }
 
 func (g *tree) Format() string {
-	return ".\n" + g.root.Format("│   ") + "\n"
+	return ".\n" + g.root.Format("│   ", g) + "\n"
 }
 
 func New(separator string) *tree {
-	return &tree{separator, &node{}}
+	return &tree{
+		separator,
+		&node{},
+		color.BlueString("%%s"),
+	}
 }
 
 func (g *tree) Eat(line string) {
