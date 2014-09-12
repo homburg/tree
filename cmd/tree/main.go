@@ -42,7 +42,7 @@ func main() {
 		lines := strings.Split(string(input), "\n")
 
 		separator := string(os.PathSeparator)
-		if len(os.Args) > 0 {
+		if len(os.Args) > 1 {
 			separator = os.Args[1]
 		}
 
