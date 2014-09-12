@@ -9,6 +9,13 @@ type node struct {
 	nodes map[string]*node
 }
 
+const (
+	TEE   = "├── "
+	PIPE  = "│   "
+	BEND  = "└── "
+	WIDTH = 8
+)
+
 func (n *node) isLeaf() bool {
 	return nil == n.nodes || len(n.nodes) == 0
 }
@@ -55,14 +62,12 @@ func (n *node) Format(indent string) string {
 		i = len(n.nodes) - 1
 		for _, key := range keys {
 			c := n.nodes[key]
-			newLine := indent[:len(indent)-8]
+			newLine := indent[:len(indent)-WIDTH]
 			if i == 0 {
-				newLine += "└── "
-				indent = indent[:len(indent)-8] + "    "
-			} else if len(indent) == 8 && i == (len(n.nodes)-1) {
-				newLine += "."
+				newLine += BEND
+				indent = indent[:len(indent)-WIDTH] + "    "
 			} else {
-				newLine += "├── "
+				newLine += TEE
 			}
 			newLine += key
 			lines = append(
@@ -73,7 +78,7 @@ func (n *node) Format(indent string) string {
 			if !c.isLeaf() {
 				lines = append(
 					lines,
-					c.Format(indent+"│   "),
+					c.Format(indent+PIPE),
 				)
 			}
 			i -= 1
@@ -89,7 +94,7 @@ type tree struct {
 }
 
 func (g *tree) Format() string {
-	return g.root.Format("│   ")
+	return ".\n" + g.root.Format("│   ") + "\n"
 }
 
 func New(separator string) *tree {
@@ -102,6 +107,8 @@ func (g *tree) Eat(line string) {
 
 func (g *tree) EatLines(lines []string) {
 	for _, line := range lines {
-		g.Eat(line)
+		if line != "" {
+			g.Eat(line)
+		}
 	}
 }

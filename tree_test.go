@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"strings"
+	"testing"
 )
 
 func ExampleTree() {
@@ -43,4 +44,40 @@ func ExampleTree() {
 	// │   │   └── fisk2.txt
 	// │   └── fisk.txt
 	// └── fisk.txt
+	//
+}
+
+func TestShallowTree(t *testing.T) {
+	lines := []string{
+		"one",
+		"other",
+		"this",
+	}
+
+	expected := `.
+├── one
+├── other
+└── this
+`
+	tr := New("/")
+	tr.EatLines(lines)
+
+	output := tr.Format()
+
+	errorFormat := `Expected
+===
+%s===
+
+Got
+===
+%s===`
+
+	if output != expected {
+		t.Error("fisk...")
+		t.Errorf(
+			errorFormat,
+			expected,
+			output,
+		)
+	}
 }
