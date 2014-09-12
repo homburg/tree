@@ -5,6 +5,14 @@
 Create an ascii tree (like `$ tree`) from any text
 using a custom delimiter.
 
+## Cli
+
+https://github.com/homburg/tree/tree/master/cmd/tree
+
+```bash
+$ go get github.com/homburg/tree/cmd/tree
+```
+
 ## Usage
 
 ```go
@@ -37,8 +45,8 @@ func main() {
 ## TODO
 
 - test
-- cli
-  - CaaP (cli as a pipe)
+- [x] cli
+  - [x] CaaP (cli as a pipe)
 
 ## LICENSE
 
