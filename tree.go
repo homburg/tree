@@ -13,9 +13,9 @@ type node struct {
 
 const (
 	TEE   = "├── "
-	PIPE  = "│   "
+	PIPE  = "│   "
 	BEND  = "└── "
-	WIDTH = 8
+	WIDTH = len(PIPE)
 )
 
 func (n *node) isLeaf() bool {
@@ -97,7 +97,7 @@ type tree struct {
 }
 
 func (g *tree) Format() string {
-	return ".\n" + g.root.Format("│   ", g) + "\n"
+	return ".\n" + g.root.Format("│   ", g) + "\n"
 }
 
 func New(separator string) *tree {
