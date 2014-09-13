@@ -118,3 +118,17 @@ Got
 		)
 	}
 }
+
+func BenchmarkTreeFormat(b *testing.B) {
+	file, err := ioutil.ReadFile("files.txt")
+	lines := strings.Split(string(file), "\n")
+	if nil != err {
+		log.Fatal(err)
+	}
+
+	for i := 0; i < b.N; i++ {
+		t := New("/")
+		t.EatLines(lines)
+		t.Format()
+	}
+}
