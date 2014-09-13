@@ -81,3 +81,40 @@ Got
 		)
 	}
 }
+
+func TestNodeFormat(t *testing.T) {
+	lines := []string{
+		"one",
+		"other$retho",
+		"this",
+	}
+
+	expected := `.
+├── ✓ one ⚡
+├── ✓ other ⚡
+│   └── ✓ retho ⚡
+└── ✓ this ⚡
+`
+	tr := New("$")
+	tr.NodeFormat = "✓ %s ⚡"
+	tr.EatLines(lines)
+
+	output := tr.Format()
+
+	errorFormat := `Expected
+===
+%s===
+
+Got
+===
+%s===`
+
+	if output != expected {
+		t.Error("fisk...")
+		t.Errorf(
+			errorFormat,
+			expected,
+			output,
+		)
+	}
+}
