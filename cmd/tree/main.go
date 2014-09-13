@@ -47,6 +47,9 @@ func main() {
 		}
 
 		t := tree.New(separator)
+		if !termutil.Isatty(os.Stdout.Fd()) {
+			t.NodeFormat = "%s"
+		}
 		t.EatLines(lines)
 		os.Stdout.WriteString(t.Format() + "\n")
 	}
