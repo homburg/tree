@@ -87,7 +87,6 @@ func (n *node) Format(indent string, t *tree) string {
 		}
 		return strings.Join(lines, "\n")
 	}
-	return ""
 }
 
 type tree struct {
