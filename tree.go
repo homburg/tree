@@ -47,10 +47,9 @@ func (n *node) eat(segments []string) {
 	}
 }
 
-func (n *node) Format(indent string, t *tree) string {
-	var lines []string
+func (n *node) Format(out chan<- string, indent string, t *tree) {
 	if n.isLeaf() || len(n.nodes) == 0 {
-		return ""
+		// pass
 	} else {
 		keys := make([]string, len(n.nodes))
 		i := 0
@@ -61,31 +60,46 @@ func (n *node) Format(indent string, t *tree) string {
 
 		sort.Strings(keys)
 
+		var outs [](chan string)
 		i = len(n.nodes) - 1
 		for _, key := range keys {
-			c := n.nodes[key]
-			newLine := indent[:len(indent)-WIDTH]
-			if i == 0 {
-				newLine += BEND
-				indent = indent[:len(indent)-WIDTH] + "    "
-			} else {
-				newLine += TEE
-			}
-			newLine += fmt.Sprintf(t.NodeFormat, key)
-			lines = append(
-				lines,
-				newLine,
-			)
+			newLineOut := make(chan string)
+			outs = append(outs, newLineOut)
 
-			if !c.isLeaf() {
-				lines = append(
-					lines,
-					c.Format(indent+PIPE, t),
-				)
-			}
-			i -= 1
+			go func(out chan<- string, key string, indent string, i int, child *node) {
+				newLine := indent[:len(indent)-WIDTH]
+				if i == 0 {
+					newLine += BEND
+					indent = indent[:len(indent)-WIDTH] + "    "
+				} else {
+					newLine += TEE
+				}
+				newLine += fmt.Sprintf(t.NodeFormat, key)
+
+				if !child.isLeaf() {
+					subOut := make(chan string)
+					go child.Format(subOut, indent+PIPE, t)
+					newLine += "\n" + <-subOut
+				}
+
+				out <- newLine
+				close(out)
+			}(newLineOut, key, indent, i, n.nodes[key])
+			i--
+
 		}
-		return strings.Join(lines, "\n")
+
+		lines := make([]string, len(outs))
+		i = 0
+		var output string
+		for _, c := range outs {
+			output = <-c
+			lines[i] = output
+			i++
+		}
+
+		out <- strings.Join(lines, "\n")
+		close(out)
 	}
 }
 
@@ -96,7 +110,9 @@ type tree struct {
 }
 
 func (g *tree) Format() string {
-	return ".\n" + g.root.Format("│   ", g) + "\n"
+	out := make(chan string)
+	go g.root.Format(out, "│   ", g)
+	return ".\n" + (<-out) + "\n"
 }
 
 func New(separator string) *tree {
