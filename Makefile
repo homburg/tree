@@ -7,5 +7,8 @@ time:
 test:
 	go test -v ./...
 
-travis: test benchmark
+travis_install:
+	go get -d -v ./... && go build -v ./...
+
+travis: travis_install test benchmark
 
