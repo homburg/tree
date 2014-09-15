@@ -132,3 +132,17 @@ func BenchmarkTreeFormat(b *testing.B) {
 		t.Format()
 	}
 }
+
+func BenchmarkHeavyTreeFormat(b *testing.B) {
+	file, err := ioutil.ReadFile("data.csv")
+	lines := strings.Split(string(file), "\n")
+	if nil != err {
+		log.Fatal(err)
+	}
+
+	for i := 0; i < b.N; i++ {
+		t := New(",")
+		t.EatLines(lines)
+		t.Format()
+	}
+}
