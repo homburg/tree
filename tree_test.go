@@ -54,10 +54,9 @@ func TestShallowTree(t *testing.T) {
 		"this",
 	}
 
-	expected := `.
-├── [34mone[0m
-├── [34mother[0m
-└── [34mthis[0m
+	expected := `[34mone[0m
+[34mother[0m
+[34mthis[0m
 `
 
 	setup := func() *tree {
@@ -97,11 +96,10 @@ func TestNodeFormat(t *testing.T) {
 		"this",
 	}
 
-	expected := `.
-├── ✓ one ⚡
-├── ✓ other ⚡
-│   └── ✓ retho ⚡
-└── ✓ this ⚡
+	expected := `✓ one ⚡
+✓ other ⚡
+└── ✓ retho ⚡
+✓ this ⚡
 `
 	setup := func() *tree {
 		tr := New("$")
@@ -109,6 +107,15 @@ func TestNodeFormat(t *testing.T) {
 		return tr
 	}
 
+	RunFormatTestCase(lines, expected, setup, t)
+}
+
+func TestSingleNode(t *testing.T) {
+	lines := []string{"1"}
+	expected := "1\n"
+	setup := func() *tree {
+		return New(".")
+	}
 	RunFormatTestCase(lines, expected, setup, t)
 }
 
