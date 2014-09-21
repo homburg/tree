@@ -59,8 +59,17 @@ func TestShallowTree(t *testing.T) {
 ├── [34mother[0m
 └── [34mthis[0m
 `
-	tr := New("/")
-	tr.EatLines(lines)
+
+	setup := func() *tree {
+		return New("/")
+	}
+	RunFormatTestCase(lines, expected, setup, t)
+}
+
+func RunFormatTestCase(inputLines []string, expected string, setup func() *tree, t *testing.T) {
+	tr := setup()
+
+	tr.EatLines(inputLines)
 
 	output := tr.Format()
 
@@ -73,7 +82,6 @@ Got
 %s===`
 
 	if output != expected {
-		t.Error("fisk...")
 		t.Errorf(
 			errorFormat,
 			expected,
@@ -95,28 +103,13 @@ func TestNodeFormat(t *testing.T) {
 │   └── ✓ retho ⚡
 └── ✓ this ⚡
 `
-	tr := New("$")
-	tr.NodeFormat = "✓ %s ⚡"
-	tr.EatLines(lines)
-
-	output := tr.Format()
-
-	errorFormat := `Expected
-===
-%s===
-
-Got
-===
-%s===`
-
-	if output != expected {
-		t.Error("fisk...")
-		t.Errorf(
-			errorFormat,
-			expected,
-			output,
-		)
+	setup := func() *tree {
+		tr := New("$")
+		tr.NodeFormat = "✓ %s ⚡"
+		return tr
 	}
+
+	RunFormatTestCase(lines, expected, setup, t)
 }
 
 func BenchmarkTreeFormat(b *testing.B) {
