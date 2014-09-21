@@ -28,17 +28,18 @@ func main() {
 	t := tree.New("-")
 
 	t.EatLines([]string{
-		"first",
-		"first-second.txt",
+		"root"
+		"root-first",
+		"root-first-second.txt",
 		"third",
 	})
 
 	fmt.Println(t.Format())
 	// Output:
-	// .
-	// ├── first
-	// │   └── second.txt
-	// └── third.txt
+	// root
+	// └─── first
+	//      └── second.txt
+	// third.txt
 }
 ```
 

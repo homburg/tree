@@ -97,7 +97,29 @@ type tree struct {
 }
 
 func (g *tree) Format() string {
-	return ".\n" + g.root.Format("│   ", g) + "\n"
+	// return g.root.Format("│   ", g) + "\n"
+
+	keys := make([]string, len(g.root.nodes))
+
+	i := 0
+	for key := range g.root.nodes {
+		keys[i] = key
+		i++
+	}
+
+	sort.Strings(keys)
+
+	var treeStr string
+	for _, key := range keys {
+		n := g.root.nodes[key]
+		treeStr += fmt.Sprintf(g.NodeFormat, key) + "\n"
+
+		if !n.isLeaf() {
+			treeStr += n.Format(PIPE, g) + "\n"
+		}
+	}
+
+	return treeStr
 }
 
 func New(separator string) *tree {
