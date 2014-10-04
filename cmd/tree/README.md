@@ -26,4 +26,18 @@ $ find pkg | tree "/"
 #             └── homburg
 #                 ├── cli.a
 #                 └── envoke.a
+
+$ git ls-files | tree
+# .travis.yml
+# LICENSE
+# Makefile
+# README.md
+# cmd
+# └── tree
+#     ├── README.md
+#     └── main.go
+# data.csv
+# files.txt
+# tree.go
+# tree_test.go
 ```
