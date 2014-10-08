@@ -49,7 +49,10 @@ func main() {
 - [x] cli
   - [x] CaaP (cli as a pipe)
 
-## LICENSE
+## LICENSE(S)
 
 MIT 2014 Thomas B Homburg
+
+[LICENSE.md](LICENSE.md)
+[LICENSES.md](LICENSES.md)
 
