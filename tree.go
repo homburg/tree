@@ -64,27 +64,33 @@ func (n *node) Format(indent string, t *tree) string {
 		i = len(n.nodes) - 1
 		for _, key := range keys {
 			c := n.nodes[key]
-			newLine := indent[:len(indent)-WIDTH]
-			if i == 0 {
-				newLine += BEND
-				indent = indent[:len(indent)-WIDTH] + "    "
-			} else {
-				newLine += TEE
-			}
-			newLine += fmt.Sprintf(t.NodeFormat, key)
-			lines = append(
-				lines,
-				newLine,
-			)
-
-			if !c.isLeaf() {
+			if !(!t.KeepLeaves && c.isLeaf()) {
+				newLine := indent[:len(indent)-WIDTH]
+				if i == 0 {
+					newLine += BEND
+					indent = indent[:len(indent)-WIDTH] + "    "
+				} else {
+					newLine += TEE
+				}
+				newLine += fmt.Sprintf(t.NodeFormat, key)
 				lines = append(
 					lines,
-					c.Format(indent+PIPE, t),
+					newLine,
 				)
+
+				if !c.isLeaf() {
+					childLine := c.Format(indent+PIPE, t)
+					if childLine != "" {
+						lines = append(
+							lines,
+							childLine,
+						)
+					}
+				}
 			}
 			i -= 1
 		}
+
 		return strings.Join(lines, "\n")
 	}
 	return ""
@@ -94,11 +100,10 @@ type tree struct {
 	separator  string
 	root       *node
 	NodeFormat string
+	KeepLeaves bool
 }
 
 func (g *tree) Format() string {
-	// return g.root.Format("│   ", g) + "\n"
-
 	keys := make([]string, len(g.root.nodes))
 
 	i := 0
@@ -127,6 +132,7 @@ func New(separator string) *tree {
 		separator,
 		&node{},
 		color.BlueString("%%s"),
+		true,
 	}
 }
 
