@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bitbucket.org/kardianos/osext"
 	"github.com/andrew-d/go-termutil"
 	"github.com/codegangsta/cli"
 	"github.com/homburg/tree"
@@ -12,6 +13,21 @@ import (
 	"syscall"
 )
 
+func removePathFromEnv(removePath string) {
+	envPath := os.Getenv("PATH")
+	paths := strings.Split(envPath, string(os.PathListSeparator))
+	var newPaths []string
+	for _, path := range paths {
+		if path == removePath || (path+"/") == removePath {
+			// Do nothing
+		} else {
+			newPaths = append(newPaths, path)
+		}
+	}
+
+	os.Setenv("PATH", strings.Join(newPaths, string(os.PathListSeparator)))
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Flags = []cli.Flag{
@@ -22,11 +38,17 @@ func main() {
 	}
 	app.Action = func(c *cli.Context) {
 		if termutil.Isatty(os.Stdin.Fd()) {
+
+			// Remove the current path from paths
+			// and try to resolve the original tree command
+			path, err := osext.ExecutableFolder()
+			removePathFromEnv(path)
+
 			whichTree, err := exec.LookPath("tree")
-			if err != nil {
+			if err == nil {
 				syscall.Exec(whichTree, os.Args, os.Environ())
-				return
 			}
+			return
 		}
 
 		// pipe it!
