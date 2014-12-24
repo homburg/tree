@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bitbucket.org/kardianos/osext"
-	"github.com/andrew-d/go-termutil"
-	"github.com/codegangsta/cli"
+	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/bitbucket.org/kardianos/osext"
+	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/github.com/andrew-d/go-termutil"
+	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/github.com/codegangsta/cli"
 	"github.com/homburg/tree"
 	"io/ioutil"
 	"log"

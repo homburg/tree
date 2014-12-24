@@ -1,0 +1,10 @@
+{
+	"ImportPath": "github.com/homburg/tree",
+	"GoVersion": "go1.3.1",
+	"Deps": [
+		{
+			"ImportPath": "github.com/fatih/color",
+			"Rev": "244daf889417d54d654735b6e669dec565b40696"
+		}
+	]
+}

@@ -2,7 +2,7 @@ package tree
 
 import (
 	"fmt"
-	"github.com/fatih/color"
+	"github.com/homburg/tree/Godeps/_workspace/src/github.com/fatih/color"
 	"sort"
 	"strings"
 )
