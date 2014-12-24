@@ -1,10 +1,10 @@
 package main
 
 import (
+	"flag"
+	"github.com/homburg/tree"
 	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/bitbucket.org/kardianos/osext"
 	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/github.com/andrew-d/go-termutil"
-	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/github.com/codegangsta/cli"
-	"github.com/homburg/tree"
 	"io/ioutil"
 	"log"
 	"os"
@@ -28,51 +28,67 @@ func removePathFromEnv(removePath string) {
 	os.Setenv("PATH", strings.Join(newPaths, string(os.PathListSeparator)))
 }
 
+var trimLeaves []bool
+
+func anyTrue(val0 bool, vals ...bool) bool {
+	if val0 {
+		return true
+	}
+	for _, v := range vals {
+		if v {
+			return true
+		}
+	}
+
+	return false
+}
+
+func init() {
+
+	trimLeaves = []bool{false, false, false}
+
+	flag.BoolVar(&trimLeaves[0], "trim-leaves", false, "")
+	flag.BoolVar(&trimLeaves[1], "-trim-leaves", false, "")
+	flag.BoolVar(&trimLeaves[2], "trim", false, "")
+}
+
 func main() {
-	app := cli.NewApp()
-	app.Flags = []cli.Flag{
-		cli.BoolFlag{
-			Name:  "trim-leaves, trim",
-			Usage: "Trim leaves.",
-		},
+	if termutil.Isatty(os.Stdin.Fd()) {
+
+		// Remove the current path from paths
+		// and try to resolve the original tree command
+		path, err := osext.ExecutableFolder()
+		removePathFromEnv(path)
+
+		whichTree, err := exec.LookPath("tree")
+		if err == nil {
+			syscall.Exec(whichTree, os.Args, os.Environ())
+		}
+		return
 	}
-	app.Action = func(c *cli.Context) {
-		if termutil.Isatty(os.Stdin.Fd()) {
 
-			// Remove the current path from paths
-			// and try to resolve the original tree command
-			path, err := osext.ExecutableFolder()
-			removePathFromEnv(path)
-
-			whichTree, err := exec.LookPath("tree")
-			if err == nil {
-				syscall.Exec(whichTree, os.Args, os.Environ())
-			}
-			return
-		}
-
-		// pipe it!
-		input, err := ioutil.ReadAll(os.Stdin)
-		if nil != err {
-			log.Fatal(err)
-		}
-
-		lines := strings.Split(string(input), "\n")
-
-		separator := c.Args().First()
-		if "" == separator {
-			separator = string(os.PathSeparator)
-		}
-
-		log.Printf("Using separator: \"%s\"\n", separator)
-
-		t := tree.New(separator)
-		if !termutil.Isatty(os.Stdout.Fd()) {
-			t.NodeFormat = "%s"
-		}
-		t.KeepLeaves = !c.Bool("trim-leaves")
-		t.EatLines(lines)
-		os.Stdout.WriteString(t.Format() + "\n")
+	// pipe it!
+	input, err := ioutil.ReadAll(os.Stdin)
+	if nil != err {
+		log.Fatal(err)
 	}
-	app.Run(os.Args)
+
+	lines := strings.Split(string(input), "\n")
+
+	flag.Parse()
+
+	separator := flag.Arg(0)
+	if "" == separator {
+		separator = string(os.PathSeparator)
+	}
+
+	log.Printf("Using separator: \"%s\"\n", separator)
+
+	t := tree.New(separator)
+	if !termutil.Isatty(os.Stdout.Fd()) {
+		t.NodeFormat = "%s"
+	}
+	t.KeepLeaves = !(anyTrue(false, trimLeaves...))
+	t.EatLines(lines)
+	os.Stdout.WriteString(t.Format() + "\n")
 }
