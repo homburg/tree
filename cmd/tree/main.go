@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"github.com/homburg/tree"
-	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/bitbucket.org/kardianos/osext"
 	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/github.com/andrew-d/go-termutil"
+	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/github.com/kardianos/osext"
 	"io/ioutil"
 	"log"
 	"os"
