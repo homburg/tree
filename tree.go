@@ -1,8 +1,10 @@
 package tree
 
 import (
+	"bufio"
 	"fmt"
 	"github.com/fatih/color"
+	"io"
 	"sort"
 	"strings"
 )
@@ -22,9 +24,9 @@ func (n *node) isLeaf() bool {
 	return nil == n.nodes || len(n.nodes) == 0
 }
 
-func (n *node) eat(segments []string) {
+func (n *node) eat(segments []string) error {
 	if len(segments) == 0 {
-		return
+		return nil
 	}
 
 	firstSegment := segments[0]
@@ -45,6 +47,8 @@ func (n *node) eat(segments []string) {
 	if len(segments) > 1 {
 		subNode.eat(segments[1:])
 	}
+
+	return nil
 }
 
 func (n *node) Format(indent string, t *tree) string {
@@ -136,14 +140,24 @@ func New(separator string) *tree {
 	}
 }
 
-func (g *tree) Eat(line string) {
+func (g *tree) eat(line string) {
 	g.root.eat(strings.Split(line, g.separator))
 }
 
-func (g *tree) EatLines(lines []string) {
-	for _, line := range lines {
+func (g *tree) ReadAll(rdr io.Reader) error {
+	scanner := bufio.NewScanner(rdr)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+
 		if line != "" {
-			g.Eat(line)
+			g.eat(line)
 		}
 	}
+
+	if err := scanner.Err(); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
 }

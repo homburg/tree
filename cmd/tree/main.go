@@ -2,15 +2,15 @@ package main
 
 import (
 	"flag"
-	"github.com/homburg/tree"
-	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/github.com/andrew-d/go-termutil"
-	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/github.com/kardianos/osext"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"strings"
 	"syscall"
+
+	"github.com/homburg/tree"
+	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/github.com/andrew-d/go-termutil"
+	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/github.com/kardianos/osext"
 )
 
 func removePathFromEnv(removePath string) {
@@ -68,13 +68,6 @@ func main() {
 	}
 
 	// pipe it!
-	input, err := ioutil.ReadAll(os.Stdin)
-	if nil != err {
-		log.Fatal(err)
-	}
-
-	lines := strings.Split(string(input), "\n")
-
 	flag.Parse()
 
 	separator := flag.Arg(0)
@@ -89,6 +82,12 @@ func main() {
 		t.NodeFormat = "%s"
 	}
 	t.KeepLeaves = !(anyTrue(false, trimLeaves...))
-	t.EatLines(lines)
+
+	err := t.ReadAll(os.Stdin)
+
+	if nil != err {
+		log.Fatal(err)
+	}
+
 	os.Stdout.WriteString(t.Format() + "\n")
 }

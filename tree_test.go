@@ -2,22 +2,24 @@ package tree
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
+	"os"
 	"strings"
 	"testing"
+
+	"github.com/renstrom/dedent"
 )
 
 func ExampleTree() {
-	file, err := ioutil.ReadFile("files.txt")
+	file, err := os.Open("files.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	g := New("/")
-	lines := strings.Split(string(file), "\n")
 
-	g.EatLines(lines)
+	g.ReadAll(file)
 
 	fmt.Print(g.Format())
 	// Output:
@@ -48,37 +50,40 @@ func ExampleTree() {
 }
 
 func TestShallowTree(t *testing.T) {
-	lines := []string{
-		"one",
-		"other",
-		"this",
-	}
+	input := strings.NewReader(dedent.Dedent(`
+		one
+		other
+		this
+		`,
+	))
 
-	expected := `[34mone[0m
-[34mother[0m
-[34mthis[0m
-`
+	expected := dedent.Dedent(`[34mone[0m
+		[34mother[0m
+		[34mthis[0m
+		`,
+	)
 
 	setup := func() *tree {
 		return New("/")
 	}
-	RunFormatTestCase(lines, expected, setup, t)
+	RunFormatTestCase(input, expected, setup, t)
 }
 
-func RunFormatTestCase(inputLines []string, expected string, setup func() *tree, t *testing.T) {
+func RunFormatTestCase(input io.Reader, expected string, setup func() *tree, t *testing.T) {
 	tr := setup()
 
-	tr.EatLines(inputLines)
+	tr.ReadAll(input)
 
 	output := tr.Format()
 
-	errorFormat := `Expected
-===
-%s===
+	errorFormat := dedent.Dedent(`Expected
+		===
+		%s===
 
-Got
-===
-%s===`
+		Got
+		===
+		%s===`,
+	)
 
 	if output != expected {
 		t.Errorf(
@@ -90,61 +95,62 @@ Got
 }
 
 func TestNodeFormat(t *testing.T) {
-	lines := []string{
-		"one",
-		"other$retho",
-		"this",
-	}
+	rdr := strings.NewReader(dedent.Dedent(`
+		one
+		other$retho
+		this
+		`,
+	))
 
-	expected := `✓ one ⚡
-✓ other ⚡
-└── ✓ retho ⚡
-✓ this ⚡
-`
+	expected := dedent.Dedent(`✓ one ⚡
+		✓ other ⚡
+		└── ✓ retho ⚡
+		✓ this ⚡
+		`,
+	)
+
 	setup := func() *tree {
 		tr := New("$")
 		tr.NodeFormat = "✓ %s ⚡"
 		return tr
 	}
 
-	RunFormatTestCase(lines, expected, setup, t)
+	RunFormatTestCase(rdr, expected, setup, t)
 }
 
 func TestSingleNode(t *testing.T) {
-	lines := []string{"1"}
+	rdr := strings.NewReader("1")
 	expected := "1\n"
 	setup := func() *tree {
 		tr := New(".")
 		tr.NodeFormat = "%s"
 		return tr
 	}
-	RunFormatTestCase(lines, expected, setup, t)
+	RunFormatTestCase(rdr, expected, setup, t)
 }
 
 func BenchmarkTreeFormat(b *testing.B) {
-	file, err := ioutil.ReadFile("files.txt")
-	lines := strings.Split(string(file), "\n")
+	file, err := os.Open("files.txt")
 	if nil != err {
 		log.Fatal(err)
 	}
 
 	for i := 0; i < b.N; i++ {
 		t := New("/")
-		t.EatLines(lines)
+		t.ReadAll(file)
 		t.Format()
 	}
 }
 
 func BenchmarkHeavyTreeFormat(b *testing.B) {
-	file, err := ioutil.ReadFile("data.csv")
-	lines := strings.Split(string(file), "\n")
+	file, err := os.Open("data.csv")
 	if nil != err {
 		log.Fatal(err)
 	}
 
 	for i := 0; i < b.N; i++ {
 		t := New(",")
-		t.EatLines(lines)
+		t.ReadAll(file)
 		t.Format()
 	}
 }
