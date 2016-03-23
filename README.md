@@ -1,58 +1,47 @@
-# Tree
+# `tree`
 
-[![Build Status](https://travis-ci.org/homburg/tree.svg?branch=master)](https://travis-ci.org/homburg/tree)
-
-Create an ascii tree (like `$ tree`) from any text
-using a custom delimiter.
-
-## Cli
-
-https://github.com/homburg/tree/tree/master/cmd/tree
-
-```bash
-$ go get github.com/homburg/tree/cmd/tree
-```
+Wraps `$ tree` with a pipable version.
 
 ## Usage
 
-```go
-package main
+```bash
+# Regular tree still works:
+$ tree
+# => 
+# .
+# ├── tmp
+# └── src
+#     └── linux_amd64
+#         └── github.com
+#             └── homburg
+#                 ├── cli.a
+#                 └── envoke.a
 
-import (
-	"fmt"
-	"github.com/homburg/tree"
-)
+# Pipable tree
+$ find pkg | tree "/"
+# .
+# └── pkg
+#     └── linux_amd64
+#         └── github.com
+#             └── homburg
+#                 ├── cli.a
+#                 └── envoke.a
 
-func main() {
-
-	t := tree.New("-")
-
-	t.EatLines([]string{
-		"root"
-		"root-first",
-		"root-first-second.txt",
-		"third",
-	})
-
-	fmt.Println(t.Format())
-	// Output:
-	// root
-	// └─── first
-	//      └── second.txt
-	// third.txt
-}
+$ git ls-files | tree
+# .travis.yml
+# LICENSE
+# Makefile
+# README.md
+# cmd
+# └── tree
+#     ├── README.md
+#     └── main.go
+# data.csv
+# files.txt
+# tree.go
+# tree_test.go
 ```
 
-## TODO
-
-- [x] test
-- [x] cli
-  - [x] CaaP (cli as a pipe)
-
-## LICENSE(S)
-
-MIT 2014 Thomas B Homburg
+# LICENSE
 
 [LICENSE.md](LICENSE.md)
-[LICENSES.md](LICENSES.md)
-

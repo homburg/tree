@@ -2,9 +2,9 @@ package main
 
 import (
 	"flag"
-	"github.com/homburg/tree"
-	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/github.com/andrew-d/go-termutil"
-	"github.com/homburg/tree/cmd/tree/Godeps/_workspace/src/github.com/kardianos/osext"
+	"github.com/andrew-d/go-termutil"
+	"github.com/homburg/go-tree"
+	"github.com/kardianos/osext"
 	"io/ioutil"
 	"log"
 	"os"
