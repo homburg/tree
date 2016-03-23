@@ -45,3 +45,4 @@ $ git ls-files | tree
 # LICENSE
 
 [LICENSE.md](LICENSE.md)
+[LICENSES.md](LICENSES.md)
