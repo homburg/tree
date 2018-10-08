@@ -55,4 +55,4 @@ $ git ls-files | tree
 [LICENSE.md](LICENSE.md)
 [LICENSES.md](LICENSES.md)
 
-<span name="some-text">Here we should go</span>
+<p name="some-text">Here we should go</p>
