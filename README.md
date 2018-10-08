@@ -2,7 +2,15 @@
 
 Wraps `$ tree` with a pipable version.
 
+[Link](#some-text)
+
 ## Usage
+
+```yaml
+- src
+  - components
+  - libraries # Something
+```
 
 ```bash
 # Regular tree still works:
@@ -46,3 +54,5 @@ $ git ls-files | tree
 
 [LICENSE.md](LICENSE.md)
 [LICENSES.md](LICENSES.md)
+
+<span name="some-text">Here we should go</span>
