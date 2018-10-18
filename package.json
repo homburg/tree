@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "tree",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:homburg/tree.git",
+  "author": "Thomas B Homburg <thomas@homburg.dk>",
+  "license": "MIT",
+  "scripts": {
+    "r": "env-cmd ./.env danger ci"
+  },
+  "devDependencies": {
+    "danger": "^4.4.8",
+    "env-cmd": "^8.0.2"
+  }
+}
