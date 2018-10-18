@@ -7,10 +7,9 @@
   "author": "Thomas B Homburg <thomas@homburg.dk>",
   "license": "MIT",
   "scripts": {
-    "r": "env-cmd ./.env danger ci"
+    "r": "godotenv -f .env.local,.env danger ci"
   },
   "devDependencies": {
-    "danger": "^4.4.8",
-    "env-cmd": "^8.0.2"
+    "danger": "^4.4.8"
   }
 }
