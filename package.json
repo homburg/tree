@@ -7,7 +7,7 @@
   "author": "Thomas B Homburg <thomas@homburg.dk>",
   "license": "MIT",
   "scripts": {
-    "r": "godotenv -f .env.local,.env danger ci --use-github-checks"
+    "r": "godotenv -f .env.local,.env danger ci"
   },
   "devDependencies": {
     "danger": "~7.0.0"
