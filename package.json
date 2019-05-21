@@ -7,7 +7,7 @@
   "author": "Thomas B Homburg <thomas@homburg.dk>",
   "license": "MIT",
   "scripts": {
-    "r": "godotenv -f .env.local,.env danger ci"
+    "r": "DANGER_JS_APP_INSTALL_ID=609557 godotenv -f .env.local,.env danger ci"
   },
   "devDependencies": {
     "danger": "~7.0.0"

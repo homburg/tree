@@ -5,11 +5,15 @@ import { checkForNewDependencies } from "danger-plugin-yarn";
 import jiraIssue from "danger-plugin-jira-issue";
 
 function fileChanges() {
+  console.log("github base: " + danger.github.base);
+  return;
   const {
     modified_files: mod,
     created_files: add,
     deleted_files: del
   } = danger.git;
+  console.log(Object.keys(danger.git));
+  console.log({ mod });
   const title = "### File changes";
 
   const files = [
@@ -68,4 +72,4 @@ function links() {
 links();
 fileChanges();
 
-schedule(dependencies());
+// schedule(dependencies());
