@@ -22,7 +22,8 @@ builds:
       - CGO_ENABLED=0
       - GO111MODULE=on
     flags:
-      - "-mod vendor"
+      - "-mod"
+      - "vendor"
     goos:
       - darwin
       - linux
